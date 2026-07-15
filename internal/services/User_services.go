@@ -30,6 +30,9 @@ func NewUserService(userRepo UserRepository) *UserService {
 
 // CreateUser создает нового пользователя.
 func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday string) error {
+	if err := s.userRepo.GetUserByTelegramID(ctx, telegramID); err == nil {
+		return errors.New("user with this telegram ID already exists")
+	}
 	user, err := model.NewUser(telegramID, birthday)
 	if err != nil {
 		return err
