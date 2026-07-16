@@ -10,14 +10,13 @@ import (
 
 // CoinRepository определяет интерфейс для работы с монетами.
 type CoinRepository interface {
+	GetCoinByID(ctx context.Context, coinID int64) (*model.Coin, error)
 	GetCoinBySymbol(ctx context.Context, symbol string) (*model.Coin, error)
 	SaveCoin(ctx context.Context, coin *model.Coin) error
 	GetAllCoins(ctx context.Context) ([]*model.Coin, error)
 	UpdateCoin(ctx context.Context, coin *model.Coin) error
 	DeleteCoin(ctx context.Context, symbol string) error
 }
-
-
 // CoinService предоставляет методы для работы с монетами.
 type CoinService struct {
 	coinRepo CoinRepository
@@ -172,3 +171,14 @@ func (s *CoinService) GetOutdatedCoins(ctx context.Context, minutes int) ([]*mod
 	return outdatedCoins, nil
 }
 
+// GetCoinByID возвращает монету по её ID.
+func (s *CoinService) GetCoinByID(ctx context.Context, coinID int64) (*model.Coin, error) {
+	if coinID <= 0 {
+		return nil, errors.New("coin id must be positive")
+	}
+	coin, err := s.coinRepo.GetCoinByID(ctx, coinID)
+	if err != nil {
+		return nil, err
+	}
+	return coin, nil
+}

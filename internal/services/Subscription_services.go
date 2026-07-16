@@ -53,3 +53,74 @@ func (s *SubscriptionService) SubscribeUserToCoin(ctx context.Context, userID in
 	}
 	return nil
 }
+
+// UnsubscribeUserFromCoin отписывает пользователя от монеты.
+func (s *SubscriptionService) UnsubscribeUserFromCoin(ctx context.Context, userID int64, coinSymbol string) error{
+	symbol := strings.ToUpper(coinSymbol)
+	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
+		return errors.New("user not found")
+	}
+	coin, err := s.coinService.GetCoinBySymbol(ctx, symbol)
+	if err != nil || coin == nil {
+		return errors.New("coin not found")
+	}
+	subscription, err := s.subscriptionRepo.GetByUserAndCoin(ctx, userID, coin.ID)
+	if err != nil || subscription == nil {
+		return errors.New("subscription not found")
+	}
+	err = s.subscriptionRepo.Delete(ctx, userID, coin.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetUserSubscriptions возвращает список подписок пользователя.
+func (s *SubscriptionService) GetUserSubscriptions(ctx context.Context, userID int64) ([]*model.Subscription, error){
+	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
+		return nil, errors.New("user not found")
+	}
+	subscriptions, err := s.subscriptionRepo.GetByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}
+
+// IsUserSubscribedToCoin проверяет, подписан ли пользователь на монету.
+func (s *SubscriptionService) IsUserSubscribedToCoin(ctx context.Context, userID int64, coinSymbol string) (bool, error){
+	symbol := strings.ToUpper(coinSymbol)
+	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
+		return false, errors.New("user not found")
+	}
+	coin, err := s.coinService.GetCoinBySymbol(ctx, symbol)
+	if err != nil || coin == nil {
+		return false, errors.New("coin not found")
+	}
+	subscription, err := s.subscriptionRepo.GetByUserAndCoin(ctx, userID, coin.ID)
+	if err != nil {
+		return false, err
+	}
+	if subscription == nil {
+		return false, nil
+	}
+	return true, nil
+}
+
+// UpdateSubscription обновляет данные подписки.
+func (s *SubscriptionService) UpdateSubscription(ctx context.Context, subscription *model.Subscription) error{
+	if subscription == nil {
+		return errors.New("subscription cannot be nil")
+	}
+	if user, err := s.userService.GetUserByID(ctx, subscription.UserID); err != nil || user == nil {
+		return errors.New("user not found")
+	}
+	if coin, err := s.coinService.GetCoinByID(ctx, subscription.CoinID); err != nil || coin == nil {
+		return errors.New("coin not found")
+	}
+	err:= s.subscriptionRepo.Update(ctx, subscription)
+	if err != nil {
+		return err
+	}
+	return nil
+}
