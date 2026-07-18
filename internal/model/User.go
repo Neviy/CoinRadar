@@ -89,3 +89,22 @@ func (u *User)IsEmailSet()bool{
 	return u.Email != nil
 }
 
+//MakePremium делает пользователя премиум-пользователем.
+func (u *User)MakePremium(){
+	u.Premium=true
+}
+
+//RemovePremium удаляет премиум-пользователя.
+func (u *User)RemovePremium(){
+	u.Premium=false
+}
+
+//PromoteToAdmin делает пользователя администратором.
+func (u *User)PromoteToAdmin(){
+	u.Admin=true
+}
+
+//PromoteToUser делает пользователя обычным пользователем.
+func (u *User)PromoteToUser(){
+	u.Admin=false
+}

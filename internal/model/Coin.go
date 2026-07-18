@@ -96,3 +96,8 @@ func (c *Coin) MarkRecommended(){
 func (c *Coin) UnmarkRecommended(){
 	c.Recommended = false
 }
+
+// IsRecommended возвращает true, если монета рекомендована.
+func (c *Coin) IsRecommended() bool {
+	return c.Recommended
+}

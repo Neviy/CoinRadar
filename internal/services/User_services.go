@@ -30,7 +30,7 @@ func NewUserService(userRepo UserRepository) *UserService {
 
 // CreateUser создает нового пользователя.
 func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday string) error {
-	if err := s.userRepo.GetUserByTelegramID(ctx, telegramID); err == nil {
+	if user, err := s.userRepo.GetUserByTelegramID(ctx,telegramID); err != nil || user != nil {
 		return errors.New("user with this telegram ID already exists")
 	}
 	user, err := model.NewUser(telegramID, birthday)
@@ -99,4 +99,72 @@ func (s *UserService) CheckStatusUser(ctx context.Context, userID int64) (bool, 
 	return user.Premium, nil
 }
 
+//MakeAdmin - делает пользователя администратором.
+func (s *UserService) MakeAdmin(ctx context.Context,  telegramID int64) (*model.User, error) {
+	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+	user.PromoteToAdmin()
+	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
 
+// RemoveAdmin - удаляет права администратора у пользователя.
+func (s *UserService) RemoveAdmin(ctx context.Context, telegramID int64) (*model.User, error) {
+	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}			
+	if !user.Admin {
+		return nil, errors.New("user is not an admin")
+	}
+	user.PromoteToUser()
+	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+//MakePremium - делает пользователя премиум.
+func (s *UserService) MakePremium(ctx context.Context, telegramID int64) (*model.User, error){
+	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+	user.MakePremium()
+	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+//RemovePremium - удаляет премиум статус у пользователя.
+func (s *UserService) RemovePremium(ctx context.Context, telegramID int64) (*model.User, error){
+	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+	if !user.Premium {
+		return nil, errors.New("user is not premium")
+	}
+	user.RemovePremium()
+	if err := s.userRepo.UpdateUser(ctx, user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
