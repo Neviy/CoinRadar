@@ -14,14 +14,14 @@ type User struct{
 	ID          int64     
 	TelegramID  int64     
 	Email       *string 
-	Birthday    string
+	Birthday    time.Time
 	Premium     bool
 	Admin       bool
-	CreateAt    time.Time
+	CreatedAt    time.Time
 }
 
 // NewUser конструктор для инициализации. 
-func NewUser(telegramID int64,birthday string)(*User,error){
+func NewUser(telegramID int64,birthday time.Time)(*User,error){
 	if telegramID <= 0 {
 		return nil,errors.New("telegram id must be positive")
 	}
@@ -34,18 +34,26 @@ func NewUser(telegramID int64,birthday string)(*User,error){
 		Birthday: birthday,
 		Premium: false,
 		Admin: false,
-		CreateAt: time.Now(),
+		CreatedAt: time.Now(),
 	},nil
 }
-// NewUserFromDB  восстановление пользователя из БД.
-func NewUserFromDB(id,telegramID int64,email *string,premium,admin bool,birthday string) *User{
+// NewUserFromDB восстанавливает пользователя из БД.
+func NewUserFromDB(id int64,
+telegramID int64,
+	email *string,
+	birthday time.Time,
+	premium bool,
+	admin bool,
+	createdAt time.Time,
+) *User {
 	return &User{
-		ID: id,
+		ID:         id,
 		TelegramID: telegramID,
-		Email: email,
-		Birthday:birthday ,
-		Premium: premium,
-		Admin: admin,
+		Email:      email,
+		Birthday:   birthday,
+		Premium:    premium,
+		Admin:      admin,
+		CreatedAt:  createdAt,
 	}
 }
 
@@ -59,14 +67,9 @@ func (u *User)SetEmail(email string)error{
 }
 
 // AgeRating возрастной цензор
-func AgeRating(birthday string)error{
-	layout := "2006-01-02"
-	parsedTime,err:=time.Parse(layout,birthday)
-	if err != nil{
-		return err
-	}
+func AgeRating(birthday time.Time)error{
 	dateNow:=time.Now()
-	duration:=dateNow.Sub(parsedTime)
+	duration:=dateNow.Sub(birthday)
 	year:=int(duration.Hours()/8766)
 	if year >=18{
 		return nil

@@ -1,4 +1,4 @@
-// package repository хранит реализацию репозиториев для работы с данными.
+// package repository хранит реализацию репозиториев для работы с user.
 package repository
 
 import (

@@ -5,6 +5,7 @@ import (
 	"CoinRadar/internal/model"
 	"context"
 	"errors"
+	"time"
 )
 
 // UserRepository определяет интерфейс для работы с пользователями.
@@ -29,7 +30,7 @@ func NewUserService(userRepo UserRepository) *UserService {
 }
 
 // CreateUser создает нового пользователя.
-func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday string) error {
+func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday time.Time) error {
 	if user, err := s.userRepo.GetUserByTelegramID(ctx,telegramID); err != nil || user != nil {
 		return errors.New("user with this telegram ID already exists")
 	}
