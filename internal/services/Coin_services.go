@@ -17,6 +17,7 @@ type CoinRepository interface {
 	UpdateCoin(ctx context.Context, coin *model.Coin) error
 	DeleteCoin(ctx context.Context, symbol string) error
 }
+
 // CoinService предоставляет методы для работы с монетами.
 type CoinService struct {
 	coinRepo CoinRepository

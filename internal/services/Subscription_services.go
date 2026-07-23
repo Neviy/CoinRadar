@@ -25,7 +25,7 @@ type SubscriptionService struct {
 }
 
 // NewSubscriptionService создает новый экземпляр SubscriptionService.
-func NewSubscriptionService(subscriptionRepo SubscriptionRepository, coinService *CoinService, userService *UserService) *SubscriptionService{
+func NewSubscriptionService(subscriptionRepo SubscriptionRepository, coinService *CoinService, userService *UserService) *SubscriptionService {
 	return &SubscriptionService{
 		subscriptionRepo: subscriptionRepo,
 		coinService:      coinService,
@@ -34,7 +34,7 @@ func NewSubscriptionService(subscriptionRepo SubscriptionRepository, coinService
 }
 
 // SubscribeUserToCoin подписывает пользователя на монету.
-func (s *SubscriptionService) SubscribeUserToCoin(ctx context.Context, userID int64, coinSymbol string) error{
+func (s *SubscriptionService) SubscribeUserToCoin(ctx context.Context, userID int64, coinSymbol string) error {
 	symbol := strings.ToUpper(coinSymbol)
 	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
 		return errors.New("user not found")
@@ -55,7 +55,7 @@ func (s *SubscriptionService) SubscribeUserToCoin(ctx context.Context, userID in
 }
 
 // UnsubscribeUserFromCoin отписывает пользователя от монеты.
-func (s *SubscriptionService) UnsubscribeUserFromCoin(ctx context.Context, userID int64, coinSymbol string) error{
+func (s *SubscriptionService) UnsubscribeUserFromCoin(ctx context.Context, userID int64, coinSymbol string) error {
 	symbol := strings.ToUpper(coinSymbol)
 	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
 		return errors.New("user not found")
@@ -76,7 +76,7 @@ func (s *SubscriptionService) UnsubscribeUserFromCoin(ctx context.Context, userI
 }
 
 // GetUserSubscriptions возвращает список подписок пользователя.
-func (s *SubscriptionService) GetUserSubscriptions(ctx context.Context, userID int64) ([]*model.Subscription, error){
+func (s *SubscriptionService) GetUserSubscriptions(ctx context.Context, userID int64) ([]*model.Subscription, error) {
 	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
 		return nil, errors.New("user not found")
 	}
@@ -88,7 +88,7 @@ func (s *SubscriptionService) GetUserSubscriptions(ctx context.Context, userID i
 }
 
 // IsUserSubscribedToCoin проверяет, подписан ли пользователь на монету.
-func (s *SubscriptionService) IsUserSubscribedToCoin(ctx context.Context, userID int64, coinSymbol string) (bool, error){
+func (s *SubscriptionService) IsUserSubscribedToCoin(ctx context.Context, userID int64, coinSymbol string) (bool, error) {
 	symbol := strings.ToUpper(coinSymbol)
 	if user, err := s.userService.GetUserByID(ctx, userID); err != nil || user == nil {
 		return false, errors.New("user not found")
@@ -108,7 +108,7 @@ func (s *SubscriptionService) IsUserSubscribedToCoin(ctx context.Context, userID
 }
 
 // UpdateSubscription обновляет данные подписки.
-func (s *SubscriptionService) UpdateSubscription(ctx context.Context, subscription *model.Subscription) error{
+func (s *SubscriptionService) UpdateSubscription(ctx context.Context, subscription *model.Subscription) error {
 	if subscription == nil {
 		return errors.New("subscription cannot be nil")
 	}
@@ -118,7 +118,7 @@ func (s *SubscriptionService) UpdateSubscription(ctx context.Context, subscripti
 	if coin, err := s.coinService.GetCoinByID(ctx, subscription.CoinID); err != nil || coin == nil {
 		return errors.New("coin not found")
 	}
-	err:= s.subscriptionRepo.Update(ctx, subscription)
+	err := s.subscriptionRepo.Update(ctx, subscription)
 	if err != nil {
 		return err
 	}

@@ -88,12 +88,12 @@ func (c *Coin) MinutesSinceUpdate() int {
 }
 
 // MarkRecommended помечает монету как рекомендованную.
-func (c *Coin) MarkRecommended(){
+func (c *Coin) MarkRecommended() {
 	c.Recommended = true
 }
 
 // UnmarkRecommended снимает пометку с монеты как рекомендованной.
-func (c *Coin) UnmarkRecommended(){
+func (c *Coin) UnmarkRecommended() {
 	c.Recommended = false
 }
 

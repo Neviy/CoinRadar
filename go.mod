@@ -2,7 +2,10 @@ module CoinRadar
 
 go 1.26.2
 
-require github.com/jackc/pgx/v5 v5.10.0
+require (
+	github.com/jackc/pgx/v5 v5.10.0
+	gopkg.in/telebot.v4 v4.0.0-beta.10
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect

@@ -72,11 +72,11 @@ func (sr *SubscriptionRepository) GetByUserID(ctx context.Context, userID int64)
 	var subscriptions []*model.Subscription
 	for rows.Next() {
 		var (
-			id                int64
-			userIDDB          int64
-			coinID            int64
-			intervalMinutes   int
-			lastSentAt        time.Time
+			id              int64
+			userIDDB        int64
+			coinID          int64
+			intervalMinutes int
+			lastSentAt      time.Time
 		)
 		if err := rows.Scan(
 			&id,

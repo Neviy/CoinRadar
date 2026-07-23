@@ -30,8 +30,8 @@ func NewUserService(userRepo UserRepository) *UserService {
 }
 
 // CreateUser создает нового пользователя.
-func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday time.Time) error {
-	if user, err := s.userRepo.GetUserByTelegramID(ctx,telegramID); err != nil || user != nil {
+func (s *UserService) CreateUser(ctx context.Context, telegramID int64, birthday time.Time) error {
+	if user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID); err != nil || user != nil {
 		return errors.New("user with this telegram ID already exists")
 	}
 	user, err := model.NewUser(telegramID, birthday)
@@ -45,13 +45,13 @@ func (s *UserService) CreateUser(ctx context.Context, telegramID int64,birthday 
 }
 
 // GetUserByID возвращает пользователя по его ID.
-func (s *UserService) GetUserByID(ctx context.Context, userID int64) (*model.User, error){
+func (s *UserService) GetUserByID(ctx context.Context, userID int64) (*model.User, error) {
 	if userID <= 0 {
 		return nil, errors.New("user id must be positive")
 	}
-	 user, err := s.userRepo.GetUserByID(ctx, userID)
-	 if err != nil {
-			return nil, err
+	user, err := s.userRepo.GetUserByID(ctx, userID)
+	if err != nil {
+		return nil, err
 	}
 	return user, nil
 }
@@ -101,7 +101,7 @@ func (s *UserService) CheckStatusUser(ctx context.Context, userID int64) (bool, 
 }
 
 //MakeAdmin - делает пользователя администратором.
-func (s *UserService) MakeAdmin(ctx context.Context,  telegramID int64) (*model.User, error) {
+func (s *UserService) MakeAdmin(ctx context.Context, telegramID int64) (*model.User, error) {
 	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
 	if err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func (s *UserService) RemoveAdmin(ctx context.Context, telegramID int64) (*model
 	}
 	if user == nil {
 		return nil, errors.New("user not found")
-	}			
+	}
 	if !user.Admin {
 		return nil, errors.New("user is not an admin")
 	}
@@ -136,7 +136,7 @@ func (s *UserService) RemoveAdmin(ctx context.Context, telegramID int64) (*model
 }
 
 //MakePremium - делает пользователя премиум.
-func (s *UserService) MakePremium(ctx context.Context, telegramID int64) (*model.User, error){
+func (s *UserService) MakePremium(ctx context.Context, telegramID int64) (*model.User, error) {
 	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
 	if err != nil {
 		return nil, err
@@ -152,7 +152,7 @@ func (s *UserService) MakePremium(ctx context.Context, telegramID int64) (*model
 }
 
 //RemovePremium - удаляет премиум статус у пользователя.
-func (s *UserService) RemovePremium(ctx context.Context, telegramID int64) (*model.User, error){
+func (s *UserService) RemovePremium(ctx context.Context, telegramID int64) (*model.User, error) {
 	user, err := s.userRepo.GetUserByTelegramID(ctx, telegramID)
 	if err != nil {
 		return nil, err

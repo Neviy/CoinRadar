@@ -45,6 +45,7 @@ func (s *Subscription) SetInterval(minutes int) {
 	}
 	s.IntervalMinutes = minutes
 }
+
 // IsReadyToSend проверяет, пора ли отправлять уведомление.
 func (s *Subscription) IsReadyToSend() bool {
 	return time.Since(s.LastSentAt) >= s.Interval()

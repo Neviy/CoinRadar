@@ -13,12 +13,12 @@ import (
 )
 
 //CoinRepository реализует репозиторий для работы с монетами.
-type CoinRepository struct{
+type CoinRepository struct {
 	conn *pgxpool.Pool
 }
 
-//NewCoinRepository создает новый экземпляр CoinRepository 
-func NewCoinRepository(conn *pgxpool.Pool)*CoinRepository{
+//NewCoinRepository создает новый экземпляр CoinRepository
+func NewCoinRepository(conn *pgxpool.Pool) *CoinRepository {
 	return &CoinRepository{
 		conn: conn,
 	}
